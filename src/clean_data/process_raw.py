@@ -1,3 +1,5 @@
+from typing import List, Any, Union
+
 import pandas as pd
 import os
 
@@ -58,3 +60,17 @@ df_house_index = (df_house_index.pipe(rename_columns)
                   .pipe(drop_columns, string='change|price', use_string=True)
                   .pipe(col_to_dates, cols=['date'])
                   )
+
+# Run pipeline the prise paid data.
+postcode_columns: List[Union[str, Any]] = ['postcode', 'latitude', 'longitude', 'grid_ref', 'county', 'district',
+                                           'ward', 'district_code', 'ward_code', 'county_code', 'constituency',
+                                           'region', 'london_zone', 'middle_layer_super_output_area', 'postcode_area',
+                                           'postcode_district']
+
+df_postcode = (df_postcode.pipe(rename_columns)
+               .pipe(drop_columns, cols=postcode_columns)
+               )
+
+df_area_info = pd.merge(df_price_cut, df_postcode, on='postcode')
+df_house_complete_district_1 = pd.merge(df_area_info, df_house_index, how='left',
+                                        left_on=['district_code', 'month_year'], right_on=['area_code', 'date'])
