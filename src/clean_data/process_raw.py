@@ -61,9 +61,11 @@ def mean_column(df, column_name, avg_list):
     df[column_name] = df[avg_list].mean(axis=1)
     return df
 
-def adjust_price(df, type ,current_index, pp_index):
-    df.loc[df['type'] == type, 'adjusted_price'] = (df[current_index] / df[pp_index]) * df['price']
+
+def adjust_price(df, house_type, current_index, pp_index):
+    df.loc[df['type'] == house_type, 'adjusted_price'] = (df[current_index] / df[pp_index]) * df['price']
     return df
+
 
 # Run pipeline the prise paid data.
 df_price_paid = (df_price_paid.pipe(remove_duplicates)
@@ -75,7 +77,7 @@ df_price_paid = (df_price_paid.pipe(remove_duplicates)
 df_house_index = (df_house_index.pipe(clean_names)
                   .pipe(drop_columns, string='change|price', use_string=True)
                   .pipe(col_to_dates, cols=['date'])
-                  .rename({'date': 'hpi_date'},  axis='columns')
+                  .rename({'date': 'hpi_date'}, axis='columns')
                   )
 
 # Run pipeline the prise paid data.
@@ -95,25 +97,24 @@ pp_index_columns = {'detached_index': 'pp_detached_index',
                     }
 
 pp_avg_columns = ['pp_detached_index', 'pp_semi_detached_index', 'pp_terraced_index', 'pp_flat_index']
-avg_columns = ['detached_index','semi_detached_index','terraced_index','flat_index']
-
+avg_columns = ['detached_index', 'semi_detached_index', 'terraced_index', 'flat_index']
 
 df_price_paid = (df_price_paid
                  .merge(df_postcode, on='postcode')
                  .merge(df_house_index, how='left', left_on=['district_code', 'month_year'],
-                                                    right_on=['area_code', 'hpi_date'])
-                 .rename(pp_index_columns,  axis='columns')
+                        right_on=['area_code', 'hpi_date'])
+                 .rename(pp_index_columns, axis='columns')
                  .pipe(mean_column, 'pp_average_index', pp_avg_columns)
-                 .merge(df_house_index, how='left', left_on=['district_code','current_month'],
-                                                    right_on=['area_code', 'date'])
+                 .merge(df_house_index, how='left', left_on=['district_code', 'current_month'],
+                        right_on=['area_code', 'date'])
                  .pipe(mean_column, 'average_index', avg_columns)
-                 .adjust_price('T' ,'terraced_index', 'pp_terraced_index')
-                 .adjust_price('S' ,'semi_detached_index', 'pp_semi_detached_index')
-                 .adjust_price('D' ,'detached_index', 'pp_detached_index')
-                 .adjust_price('F' ,'flat_index', 'pp_flat_index')
-                 .adjust_price('O' ,'current_average_index', 'pp_current_average_index'))
+                 .adjust_price('T', 'terraced_index', 'pp_terraced_index')
+                 .adjust_price('S', 'semi_detached_index', 'pp_semi_detached_index')
+                 .adjust_price('D', 'detached_index', 'pp_detached_index')
+                 .adjust_price('F', 'flat_index', 'pp_flat_index')
+                 .adjust_price('O', 'current_average_index', 'pp_current_average_index'))
 
 df_price_paid = df_price_paid[df_price_paid['adjusted_price'].notnull()]
 df_price_paid['adjusted_price'] = df_price_paid['adjusted_price'].astype(int)
 
-df_price_paid.to_csv("../data/processed/processed.csv", index = False)
+df_price_paid.to_csv("../data/processed/processed.csv", index=False)
