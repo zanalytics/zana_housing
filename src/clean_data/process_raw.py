@@ -1,7 +1,6 @@
 from typing import List, Any, Union
 
 import pandas as pd
-import os
 from datetime import datetime
 import dateutil.relativedelta
 
@@ -100,7 +99,7 @@ avg_columns = ['detached_index','semi_detached_index','terraced_index','flat_ind
 
 
 df_price_paid = (df_price_paid
-                 .merge(df_postcode, on='postcode').
+                 .merge(df_postcode, on='postcode')
                  .merge(df_house_index, how='left', left_on=['district_code', 'month_year'],
                                                     right_on=['area_code', 'hpi_date'])
                  .rename(pp_index_columns,  axis='columns')
