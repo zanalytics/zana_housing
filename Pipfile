@@ -66,6 +66,9 @@ PyJWT = "==1.7.1"
 matplotlib = "*"
 plotly = "*"
 nbformat = "*"
+jupyter = "*"
+basemap = {file = "https://github.com/matplotlib/basemap/archive/master.zip"}
+sklearn = "*"
 
 [dev-packages]
 
