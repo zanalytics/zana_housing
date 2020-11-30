@@ -69,6 +69,8 @@ nbformat = "*"
 jupyter = "*"
 basemap = {file = "https://github.com/matplotlib/basemap/archive/master.zip"}
 sklearn = "*"
+folium = "*"
+seaborn = "*"
 
 [dev-packages]
 

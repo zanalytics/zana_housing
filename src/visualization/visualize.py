@@ -5,13 +5,15 @@ from sklearn.model_selection import train_test_split
 pd.options.plotting.backend = 'matplotlib'
 plt.interactive(True)
 pd.set_option('display.max_columns', 500)
+pd.set_option('display.max_columns', 500)
 
-keep_cols = ['id', 'price', 'adjusted_price', 'date', 'postcode', 'type', 'new_build', 'land', 'month_year',
-             'latitude', 'longitude', 'county', 'postcode_area', 'postcode_district', 'region',
-             'region_name']
+keep_cols = ['id', 'adjusted_price', 'type', 'new_build', 'land', 'latitude', 'longitude']
 
-df = pd.read_csv("./data/processed/processed.csv", parse_dates=['date', 'month_year'], usecols=keep_cols)
+df = pd.read_csv("./data/processed/processed.csv", parse_dates=['date', 'month_year'])
 
+df.loc['primary_address', 'secondary_address'].isna().sum()
+
+luton = df[df["postcode"] == "LU5 4GY"]
 
 df.describe()
 df["type"].value_counts()
@@ -50,11 +52,12 @@ fig, ax = plt.subplots(figsize=(20, 7))
 
 train_set.plot(kind="scatter", x="longitude", y="latitude", alpha=0.1)
 
-train_set.plot(kind="scatter", x="longitude", y="latitude",
+df.plot(kind="scatter", x="longitude", y="latitude",
                alpha=0.4, label="price paid locations",
                figsize=(20,14), c="adjusted_price",
                 cmap=plt.get_cmap("jet"), colorbar=True)
 plt.legend()
+plt.show()
 
 
 financial_crash = df['month_year'][df['month_year'] == '2007-12-01'].value_counts()[0]
