@@ -4,6 +4,11 @@ from datetime import datetime
 import dateutil.relativedelta
 import transform_functions
 from transform_functions import *
+import logging
+from sklearn.model_selection import train_test_split
+
+random_seed = 42
+logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
 
 column_names = ['id', 'price', 'date', 'postcode',
                 'type', 'new_build', 'land', 'primary_address',
@@ -99,5 +104,27 @@ df_price_paid = (df_price_paid
 df_price_paid = df_price_paid[df_price_paid['adjusted_price'].notnull()]
 df_price_paid['adjusted_price'] = df_price_paid['adjusted_price'].astype(int)
 
+logging.info("Completed processing")
+
 # Lets drop the duplicates, keeping only the first instance.
 df_price_paid.to_csv("./data/processed/processed.csv", index=False)
+
+# Split the data - train, validation and test
+train_set, test_set = train_test_split(df_price_paid,
+                                       test_size=0.30,
+                                       random_state=random_seed)
+
+test_set, validation_set = train_test_split(test_set,
+                                            test_size=0.20,
+                                            random_state=random_seed)
+
+logging.info(f"Training shape: {train_set.shape}")
+logging.info(f"Validation shape: {validation_set.shape}")
+logging.info(f"Test shape: {test_set.shape}")
+
+# Save the split files
+train_set.to_csv("./data/processed/train.csv", index=False)
+validation_set.to_csv("./data/processed/validation.csv", index=False)
+test_set.to_csv("./data/processed/test.csv", index=False)
+
+logging.info(f"Transforming and splitting complete")

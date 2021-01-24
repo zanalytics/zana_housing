@@ -1,5 +1,7 @@
 import requests, zipfile, io
+import logging
 
+logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
 
 def raw_data(url, destination, file_name):
     """
@@ -20,11 +22,11 @@ def raw_data(url, destination, file_name):
     r = requests.get(url, stream=True)
     file_path = destination + file_name
 
-    with open(destination, "wb") as csv:
+    with open(file_path, "wb") as csv:
         for chunk in r.iter_content(chunk_size=10 ** 6):
             if chunk:
                 csv.write(chunk)
-    return print("File written to destination")
+    return logging.info("File written to destination")
 
 def download_zip(url, destination):
     """
@@ -42,3 +44,4 @@ def download_zip(url, destination):
     r = requests.get(url)
     z = zipfile.ZipFile(io.BytesIO(r.content))
     z.extractall(destination)
+    return logging.info("All files unzipped into destination")
