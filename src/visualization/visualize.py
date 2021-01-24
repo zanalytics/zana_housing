@@ -7,9 +7,9 @@ plt.interactive(True)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.max_columns', 500)
 
-keep_cols = ['id', 'adjusted_price', 'type', 'new_build', 'land', 'latitude', 'longitude']
+# keep_cols = ['id', 'adjusted_price', 'type', 'new_build', 'land', 'latitude', 'longitude']
 
-df = pd.read_csv("./data/processed/processed.csv", parse_dates=['date', 'month_year'])
+df = pd.read_csv("./data/processed/processed.csv", parse_dates=['date', 'month_year'], nrows=10)
 
 df.loc['primary_address', 'secondary_address'].isna().sum()
 

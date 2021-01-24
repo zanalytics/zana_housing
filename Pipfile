@@ -71,6 +71,10 @@ basemap = {file = "https://github.com/matplotlib/basemap/archive/master.zip"}
 sklearn = "*"
 folium = "*"
 seaborn = "*"
+xgboost = "*"
+h2o = "*"
+auto-sklearn = "*"
+pycodestyle = "*"
 
 [dev-packages]
 
