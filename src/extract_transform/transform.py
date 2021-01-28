@@ -8,7 +8,8 @@ import logging
 from sklearn.model_selection import train_test_split
 
 random_seed = 42
-logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
+logging.info(f"Executing transform.py")
 
 column_names = ['id', 'price', 'date', 'postcode',
                 'type', 'new_build', 'land', 'primary_address',
@@ -21,7 +22,6 @@ df_price_paid = pd.read_csv("./data/raw/pp-complete.csv", names=column_names,
 
 # Read in house price index
 df_house_index = pd.read_csv("./data/raw/house_price_index.csv")
-print(df_house_index)
 
 # Read in postcode data
 df_postcode = pd.read_csv("./data/raw/postcodes.csv")

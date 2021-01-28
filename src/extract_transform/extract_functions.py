@@ -1,7 +1,7 @@
 import requests, zipfile, io
 import logging
 
-logging.basicConfig(level=logging.INFO, format='%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 
 def raw_data(url, destination, file_name):
     """
