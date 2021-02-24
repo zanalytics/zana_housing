@@ -1,10 +1,12 @@
 from typing import List, Any, Union
+import numpy as np
 import pandas as pd
 from datetime import datetime
 import dateutil.relativedelta
 import transform_functions
 from transform_functions import *
 import logging
+from scipy import stats
 from sklearn.model_selection import train_test_split
 
 random_seed = 42
@@ -17,14 +19,15 @@ column_names = ['id', 'price', 'date', 'postcode',
                 'district', 'county', 'ppd', 'record']
 
 # Read in price paid data
-df_price_paid = pd.read_csv("./data/raw/pp-complete.csv", names=column_names,
+df_price_paid = pd.read_csv("./data/processed/pp_sample.csv", names=column_names,
                             parse_dates=['date'])
-
 # Read in house price index
 df_house_index = pd.read_csv("./data/raw/house_price_index.csv")
 
 # Read in postcode data
 df_postcode = pd.read_csv("./data/raw/postcodes.csv")
+
+logging.info(f"Datasets Read")
 
 df_price_paid = (df_price_paid.pipe(remove_duplicates)
                  .pipe(price_paid_process,
@@ -46,7 +49,17 @@ postcode_columns: List[Union[str, Any]] = ['postcode', 'latitude', 'longitude',
                                            'london_zone',
                                            'middle_layer_super_output_area',
                                            'postcode_area',
-                                           'postcode_district']
+                                           'postcode_district', 
+                                           'index_of_multiple_deprivation', 
+                                           'quality', 'user_type', 
+                                           'last_updated', 'nearest_station', 
+                                           'distance_to_station', 
+                                           'postcode_area', 'postcode_district', 
+                                           'police_force', 'water_company', 
+                                           'plus_code', 'average_income', 
+                                           'sewage_company', 
+                                           'travel_to_work_area', 'rural_urban',
+                                           'altitude']
 
 df_postcode = (df_postcode.pipe(clean_names)
                .loc[:, postcode_columns]
@@ -103,6 +116,7 @@ df_price_paid = (df_price_paid
 
 df_price_paid = df_price_paid[df_price_paid['adjusted_price'].notnull()]
 df_price_paid['adjusted_price'] = df_price_paid['adjusted_price'].astype(int)
+df_price_paid = df_price_paid[(np.abs(stats.zscore(df_price_paid["adjusted_price"])) < 3)]
 
 logging.info("Completed processing")
 

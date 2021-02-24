@@ -17,6 +17,8 @@ def clean_names(df):
     """
     df.columns = map(str.lower, df.columns)
     df.columns = df.columns.str.replace(' ', '_')
+    df.columns = df.columns.str.replace(".", '_')
+    df.columns = df.columns.str.replace("/", '_')
     return df
 
 
