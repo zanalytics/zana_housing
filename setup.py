@@ -4,7 +4,7 @@ setup(
     name='src',
     packages=find_packages(),
     version='0.1.0',
-    description='Price Paid Data - Analysis',
-    author='zanalytics',
-    license='MIT',
+    description='This is the Zanalytics housing project',
+    author='Zanalytics',
+    license='',
 )
