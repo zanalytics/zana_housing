@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import folium
-from sklearn.model_selection import train_test_split
 pd.options.plotting.backend = 'matplotlib'
 plt.interactive(True)
 pd.set_option('display.max_columns', 500)
@@ -9,24 +7,15 @@ pd.set_option('display.max_columns', 500)
 
 # keep_cols = ['id', 'adjusted_price', 'type', 'new_build', 'land', 'latitude', 'longitude']
 
-df = pd.read_csv("./data/processed/train.csv", parse_dates=['date', 'month_year'], nrows=10000)
-
-dashed_line = print("-"*70)
+df = pd.read_csv("./data/processed/train.csv", parse_dates=['date', 'month_year'])
 
 print(df.head())
 print("-"*70)
 print(df.describe())
 print("-"*70)
-print(df["type"].value_counts())
-print("-"*70)
-print(df["new_build"].value_counts())
-print("-"*70)
-print(df["land"].value_counts())
-print("-"*70)
-print(df["region"].value_counts())
-
-# df.hist(bins=50, figsize=(20,15))
-# plt.show()
+print(df.isna().sum())
+df.hist(bins=50, figsize=(20,15))
+plt.show()
 
 # df = df[(df['price'] <= 1000000) & (df['price'] >= 10000)].reset_index(drop=True)
 

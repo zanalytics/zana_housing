@@ -60,11 +60,12 @@ X_test = X_test[features]
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
+from sklearn.ensemble import GradientBoostingRegressor
 
-# lin_model = RandomForestRegressor()
-# lin_model = MLPRegressor()
+#lin_model = GradientBoostingRegressor()
+lin_model = RandomForestRegressor()
+#lin_model = MLPRegressor()
 #lin_model = LinearRegression()
-lin_model = SVR(kernel='poly')
 lin_model.fit(X_train, y_train)
 
 # make predictions for train set
@@ -135,8 +136,12 @@ print('Root Mean Log Squared Error:', np.sqrt(metrics.mean_squared_log_error(y_t
 print('Mean Absolute Error/Mean :', (metrics.mean_absolute_error(y_test, pred) / y_train.mean() * 100),'%')
 
 # let's evaluate our predictions respect to the real sale price
-plt.scatter(y_test, pred)
-plt.xlabel('True House Price')
-plt.ylabel('Predicted House Price')
-plt.title('Evaluation of Lasso Predictions')
+# plt.scatter(y_test, pred)
+# plt.xlabel('True House Price')
+# plt.ylabel('Predicted House Price')
+# plt.title('Evaluation of Lasso Predictions')
+# plt.show()
+
+errors = y_test - pred
+plt.hist(errors, bins=75)
 plt.show()

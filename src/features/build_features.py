@@ -172,7 +172,9 @@ def create_features(X_train, X_test):
     print(len(X_train.columns)) 
     print(len(X_test.columns)) 
     print(list_diff(X_train.columns, X_test.columns))
-
+    print(X_train.isnull().sum())
+    print(X_test.isnull().sum())
+    
     train_vars = [var for var in X_train.columns if var not in ['id', 'adjusted_price']]
 
     print(train_vars)
@@ -189,7 +191,7 @@ def create_features(X_train, X_test):
     # let's now save the train and test sets for the next notebook!
     print(len(X_train.columns)) 
     print(len(X_test.columns)) 
-    print(list_diff(X_train.columns, X_test.columns))
+    # print(list_diff(X_train.columns, X_test.columns))
 
     X_train.to_csv('./data/processed/xtrain.csv', index=False)
     X_test.to_csv('./data/processed/xtest.csv', index=False)

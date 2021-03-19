@@ -8,7 +8,7 @@ from transform_functions import *
 import logging
 from scipy import stats
 from sklearn.model_selection import train_test_split
-
+pd.set_option('display.max_columns', None)
 random_seed = 42
 logging.basicConfig(level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
 logging.info(f"Executing transform.py")
@@ -19,8 +19,9 @@ column_names = ['id', 'price', 'date', 'postcode',
                 'district', 'county', 'ppd', 'record']
 
 # Read in price paid data
-df_price_paid = pd.read_csv("./data/processed/pp_sample.csv", names=column_names,
+df_price_paid = pd.read_csv("./data/processed/pp_sample_ext.csv",
                             parse_dates=['date'])
+
 # Read in house price index
 df_house_index = pd.read_csv("./data/raw/house_price_index.csv")
 
@@ -29,9 +30,14 @@ df_postcode = pd.read_csv("./data/raw/postcodes.csv")
 
 logging.info(f"Datasets Read")
 
-df_price_paid = (df_price_paid.pipe(remove_duplicates)
+county_rename = {'county_x': 'county'}
+
+df_price_paid = (df_price_paid
+                 .pipe(drop_columns, string='lmk_key')
+                 .rename(county_rename, axis='columns')
+                 .pipe(remove_duplicates)
                  .pipe(price_paid_process,
-                 min=10000, max=5000000, number_of_months=3)
+                 min=10000, max=5000000, number_of_months=4)
                  .drop(columns=['locality', 'town_city', 'district', 'county'])
                  )
 
@@ -89,7 +95,7 @@ df_price_paid = (df_price_paid
                  .pipe(mean_column, 'average_index', avg_columns)
                  .pipe(adjust_price, 'T', 'terraced_index',
                        'pp_terraced_index')
-                 .pipe(adjust_price, 'S', 'semi_detached_index',
+                .pipe(adjust_price, 'S', 'semi_detached_index',
                        'pp_semi_detached_index')
                  .pipe(adjust_price, 'D', 'detached_index',
                        'pp_detached_index')
@@ -101,7 +107,7 @@ duplicate_list = ['date', 'postcode', 'type', 'new_build', 'land',
                   'ppd', 'record', 'month_year', 'current_month',
                   'latitude', 'longitude', 'grid_ref', 'county',
                   'district', 'ward', 'district_code', 'ward_code',
-                  'county_code', 'constituency', 'region',
+                  'county_code', 'region',
                   'london_zone', 'middle_layer_super_output_area',
                   'postcode_area', 'postcode_district',
                   'hpi_date', 'region_name', 'area_code']
